@@ -13,14 +13,34 @@ const App = () => {
     ]
 
     const [selected, setSelected] = useState(0)
+    const [votes, setVotes] = useState({})
 
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
 
+    function handleVote(id) {
+        setVotes(prevVotes => ({
+            ...prevVotes,
+            [id]: (prevVotes[id] || 0) + 1
+        }));
+    }
+
+    function getVotes(id) {
+        if (votes[id]) {
+            return votes[id];
+        }
+
+        return 0;
+    }
+
     return (
         <>
-            <p>{anecdotes[selected]}</p>
+            <div>
+                <p>{anecdotes[selected]}</p>
+                <p>has {getVotes(selected)} votes</p>
+            </div>
+            <button onClick={() => {handleVote(selected)}}>vote</button>
             <button onClick={() => {setSelected(getRandomInt(anecdotes.length))}}>next anecdote</button>
         </>
     )
