@@ -1,5 +1,29 @@
 import { useState } from 'react'
 
+const PopularAnecdote = ({anecdotes, votes}) => {
+    let mostVotedId = null;
+    let max = 0;
+
+    for (let id in votes) {
+        if (votes[id] > max) {
+            max = votes[id];
+            mostVotedId = id;
+        }
+    }
+
+    if (max > 0) {
+        return (
+            <>
+                <h1>Anecdote with most votes</h1>
+                <div>
+                    <p>{anecdotes[mostVotedId]}</p>
+                    <p>has {max} votes</p>
+                </div>
+            </>
+        )
+    }
+}
+
 const App = () => {
     const anecdotes = [
         'If it hurts, do it more often.',
@@ -42,6 +66,7 @@ const App = () => {
             </div>
             <button onClick={() => {handleVote(selected)}}>vote</button>
             <button onClick={() => {setSelected(getRandomInt(anecdotes.length))}}>next anecdote</button>
+            <PopularAnecdote anecdotes={anecdotes} votes={votes} />
         </>
     )
 }
