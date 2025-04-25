@@ -82,8 +82,11 @@ const App = () => {
                         setNotification({text: null, success: null})
                     }, 5000)
                 })
-                .catch(error => {
-                    alert("Error deleting person:", error);
+                .catch(() => {
+                    setNotification({text: `Information of ${name} has already been removed from server`, success: false})
+                    setTimeout(() => {
+                        setNotification({text: null, success: null})
+                    }, 5000)
                 })
         }
     }
