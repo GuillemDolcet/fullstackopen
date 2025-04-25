@@ -2,14 +2,14 @@ import {useEffect, useState} from 'react'
 import Filter from "./components/Filter.jsx";
 import Form from "./components/Form.jsx";
 import Persons from "./components/Persons.jsx";
-import axios from "axios";
+import personsService from "./services/persons.jsx";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
 
     useEffect(() => {
-        axios
-            .get("http://localhost:3001/persons")
+        personsService
+            .getAll()
             .then(response => {
                 setPersons(response.data)
             })
@@ -23,7 +23,14 @@ const App = () => {
         event.preventDefault()
 
         if (!persons.find(o => o.name === newName || o.number === newNumber)) {
-            setPersons(persons => [...persons, {name: newName, number: newNumber}])
+            personsService
+                .create({name: newName, number: newNumber})
+                .then(response => {
+                    setPersons(persons.concat(response.data));
+                    setNewName('');
+                    setNewNumber('');
+                })
+
             return;
         }
 
