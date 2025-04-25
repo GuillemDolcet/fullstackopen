@@ -49,6 +49,19 @@ const App = () => {
         setNewNumber(event.target.value)
     }
 
+    const handleDeletePerson = (personId, name) => {
+        if (confirm(`Delete ${name}`)) {
+            personsService
+                .destroy(personId)
+                .then(() => {
+                    setPersons(persons.filter(person => person.id !== personId))
+                })
+                .catch(error => {
+                    alert("Error deleting person:", error);
+                })
+        }
+    }
+
     const personsFiltered = persons.filter(
         person => person.name.toLowerCase().includes(filterName.toLowerCase())
     );
@@ -65,7 +78,7 @@ const App = () => {
                 handleNumberChange={handleNumberChange}
             />
             <h2>Numbers</h2>
-            <Persons persons={personsFiltered} />
+            <Persons persons={personsFiltered} handleDeletePerson={handleDeletePerson}/>
         </div>
     )
 }
