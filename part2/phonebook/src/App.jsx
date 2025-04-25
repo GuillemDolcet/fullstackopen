@@ -3,6 +3,7 @@ import Filter from "./components/Filter.jsx";
 import Form from "./components/Form.jsx";
 import Persons from "./components/Persons.jsx";
 import personsService from "./services/persons.jsx";
+import Notification from "./components/Notification.jsx";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
@@ -18,6 +19,7 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [filterName, setFilterName] = useState('')
+    const [notification, setNotification] = useState({text: null, success: null})
 
     const onSubmit = (event) => {
         event.preventDefault()
@@ -29,6 +31,10 @@ const App = () => {
                 .create({name: newName, number: newNumber})
                 .then(response => {
                     setPersons(persons.concat(response.data));
+                    setNotification({text: `Added ${response.data.name}`, success: true})
+                    setTimeout(() => {
+                        setNotification({text: null, success: null})
+                    }, 5000)
                     setNewName('');
                     setNewNumber('');
                 })
@@ -43,6 +49,10 @@ const App = () => {
                     setPersons(persons.map(p =>
                         p.id !== existingPerson.id ? p : response.data
                     ));
+                    setNotification({text: `Updated ${response.data.name}`, success: true})
+                    setTimeout(() => {
+                        setNotification({text: null, success: null})
+                    }, 5000)
                     setNewName('');
                     setNewNumber('');
                 })
@@ -67,6 +77,10 @@ const App = () => {
                 .destroy(personId)
                 .then(() => {
                     setPersons(persons.filter(person => person.id !== personId))
+                    setNotification({text: `Deleted ${name}`, success: true})
+                    setTimeout(() => {
+                        setNotification({text: null, success: null})
+                    }, 5000)
                 })
                 .catch(error => {
                     alert("Error deleting person:", error);
@@ -81,6 +95,7 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification text={notification.text} success={notification.success} />
             <Filter onChange={handleFilterNameChange} value={filterName}></Filter>
             <Form
                 onSubmit={onSubmit}
