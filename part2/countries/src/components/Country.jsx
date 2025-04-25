@@ -1,5 +1,13 @@
+import {useState} from "react";
+
 const Country = ({country, showAllInfo}) => {
-    if (showAllInfo) {
+    const [showAll, setShowAllInfo] = useState(showAllInfo);
+
+    const handleClickShowAll = () => {
+        setShowAllInfo(true);
+    }
+
+    if (showAll) {
         return (
             <div>
                 <h1>{country.name.common}</h1>
@@ -23,7 +31,7 @@ const Country = ({country, showAllInfo}) => {
     }
 
     return (
-        <div>{country.name.common}</div>
+        <div>{country.name.common} <button onClick={handleClickShowAll}>show</button></div>
     )
 }
 
