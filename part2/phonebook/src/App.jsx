@@ -22,7 +22,9 @@ const App = () => {
     const onSubmit = (event) => {
         event.preventDefault()
 
-        if (!persons.find(o => o.name === newName || o.number === newNumber)) {
+        const existingPerson = persons.find(p => p.name === newName);
+
+        if (! existingPerson) {
             personsService
                 .create({name: newName, number: newNumber})
                 .then(response => {
@@ -34,7 +36,17 @@ const App = () => {
             return;
         }
 
-        alert(`${newName} is already added to phonebook`)
+        if (confirm(`${newName} is already added to phonebook, replace the old number with a new one ?`)) {
+            personsService
+                .update(existingPerson.id, {name: existingPerson.name, number: newNumber})
+                .then(response => {
+                    setPersons(persons.map(p =>
+                        p.id !== existingPerson.id ? p : response.data
+                    ));
+                    setNewName('');
+                    setNewNumber('');
+                })
+        }
     }
 
     const handleFilterNameChange = (event) => {
@@ -50,7 +62,7 @@ const App = () => {
     }
 
     const handleDeletePerson = (personId, name) => {
-        if (confirm(`Delete ${name}`)) {
+        if (confirm(`Delete ${name} ?`)) {
             personsService
                 .destroy(personId)
                 .then(() => {
