@@ -23,8 +23,6 @@ function App() {
        return country.name.common.toLowerCase().includes(searcher.toLowerCase());
     });
 
-    console.log(countriesFiltered)
-
     return (
         <>
             <Searcher value={searcher} handleChange={handleChangeSearcher}/>
