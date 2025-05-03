@@ -15,6 +15,14 @@ morgan.token('body', req => {
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
+app.get('/info', (request, response) => {
+    response.send(`
+        <div>Phonebook has info for ${persons.length} people</div>
+        <br />
+        <div>${new Date()}</div>
+    `)
+})
+
 app.get('/api/persons', (request, response, next) => {
     Persons.find({})
         .then(person => {
@@ -45,6 +53,23 @@ app.post('/api/persons', (request, response, next) => {
         })
         .catch(error => next(error))
 })
+
+app.put('/api/persons/:id', (request, response, next) => {
+    const { name, number } = request.body
+
+    const update = { name, number }
+
+    Persons.findByIdAndUpdate(request.params.id, update, { new: true, runValidators: true, context: 'query' })
+        .then(updatedPerson => {
+            if (updatedPerson) {
+                response.json(updatedPerson)
+            } else {
+                response.status(404).end()
+            }
+        })
+        .catch(error => next(error))
+})
+
 
 app.delete('/api/persons/:id', (request, response, next) => {
     Persons.findByIdAndDelete(request.params.id)
