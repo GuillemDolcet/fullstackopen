@@ -15,12 +15,15 @@ morgan.token('body', req => {
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-app.get('/info', (request, response) => {
-    response.send(`
-        <div>Phonebook has info for ${persons.length} people</div>
-        <br />
-        <div>${new Date()}</div>
-    `)
+app.get('/info', async (request, response) => {
+    Persons.countDocuments({})
+        .then(count => {
+            response.send(`
+                <div>Phonebook has info for ${count} people</div>
+                <br />
+                <div>${new Date()}</div>
+            `)
+        })
 })
 
 app.get('/api/persons', (request, response, next) => {
