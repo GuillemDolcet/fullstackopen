@@ -38,6 +38,12 @@ const App = () => {
                     setNewName('');
                     setNewNumber('');
                 })
+                .catch(error => {
+                    setNotification({text: error.response.data.error, success: false})
+                    setTimeout(() => {
+                        setNotification({text: null, success: null})
+                    }, 5000)
+                });
 
             return;
         }
@@ -56,6 +62,12 @@ const App = () => {
                     setNewName('');
                     setNewNumber('');
                 })
+                .catch(error => {
+                    setNotification({text: error.response.data.error, success: false})
+                    setTimeout(() => {
+                        setNotification({text: null, success: null})
+                    }, 5000)
+                });
         }
     }
 
